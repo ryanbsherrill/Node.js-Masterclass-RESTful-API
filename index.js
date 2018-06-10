@@ -4,9 +4,20 @@
 
 // dependencies
 const http = require('http')
+const url = require('url')
 
 // the server should respond to all requests with a string
 const server = http.createServer((req, res) => {
+
+  // get url and parse
+  const parsedUrl = url.parse(req.url, true)
+
+  // get the url path
+
+  // send the response
+
+  // log the request path
+
   res.end('Yellow Werld!\n')
 })
 
