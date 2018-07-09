@@ -21,11 +21,19 @@ const server = http.createServer((req, res) => {
   // Get HTTP Method
   const method = req.method.toLowerCase()
 
+  // Get headers as an object
+  const headers = req.headers
+
   // Send response
   res.end('Yellow Werld?\n')
 
-  // Log request path
-  console.log(`Request received on path: ${trimmedPath}, w/ method: ${method}, and query string params:`, queryStringObject)
+  // Log request path, method, qs params, headers
+  console.log(`\nRequest received...
+  path: ${trimmedPath}
+  method: ${method}
+  params:`, queryStringObject,
+  '\n  headers:\n ', headers)
+
 
 })
 
