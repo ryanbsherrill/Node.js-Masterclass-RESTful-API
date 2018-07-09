@@ -1,28 +1,33 @@
 /**
- * Primary file for API
+ * Primary file for api
 */
 
 // Dependencies
-const http = require(`http`)
-const url = require(`url`)
+const http = require('http')
+const url = require('url')
 
 // Server should respond to all requests w/ a string
 const server = http.createServer((req, res) => {
 
-  // 1. Get URL and parse it
+  // Get URL and parse
   const parsedUrl = url.parse(req.url, true)
-  // console.log(parsedUrl)
 
-  // 2. Get and trim URL path
+  // Get path
   const path = parsedUrl.pathname
-  const trimmedPath = path.replace(/^\/+|\/+$/g,``)
+  const trimmedPath = path.replace(/^\/+|\/+$/g, '') // regex trims slashes
 
-  // 3. Send response
-  res.end(`Hello World!!!\n`)
+  // Get HTTP Method
+  const method = req.method.toLowerCase()
 
-  // 4. Log trimmed path
-  console.log(`Request received on path: ${trimmedPath}`)
+  // Send response
+  res.end('Yellow Werld?\n')
+
+  // Log request path
+  console.log(`Request received on path: ${trimmedPath} w/ method: ${method}`)
+
 })
 
-// Start server and listen on port 3000
-server.listen(3000, () => console.log(`Server listening on port 3000`))
+// Start server and listen on PORT 3000
+server.listen(3000, () => {
+  console.log('Server listening on port 3000')
+})

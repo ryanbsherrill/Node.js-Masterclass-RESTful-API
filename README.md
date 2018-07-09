@@ -1,4 +1,10 @@
-# Ups & Downs: RESTful API
+# Node.js Masterclass: API
+
+## What is it?
+- RESTful API for an uptime monitoring app
+- Users enter URLs they want monitored and get SMS alerts when resources "go down" or "come back up"
+
+## Functionality Checklist:
 
 #### 1. Listen on PORT and accept incoming HTTP requests for
   - [ ] POST
