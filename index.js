@@ -20,10 +20,10 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     buffer += decoder.end()
     
-    const chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound
+    const chosenRouteHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : routeHandlers.notFound
     const data = { trimmedPath, queryStringObject, method, headers, 'payload': buffer }
     
-    chosenHandler(data, (statusCode, payload) => {
+    chosenRouteHandler(data, (statusCode, payload) => {
       statusCode = typeof(statusCode) == 'number' ? statusCode : 200
       payload = typeof(payload) == 'object' ? payload : {}
       
@@ -39,9 +39,9 @@ const server = http.createServer((req, res) => {
 
 server.listen(3000, () => console.log('Server listening on port 3000'))
 
-const handlers = {}
+const routeHandlers = {}
 
-handlers.sample = (data, cb) => cb(406, { 'name': 'sample handler' })
-handlers.notFound = (data, cb) => cb(404)
+routeHandlers.sample = (data, cb) => cb(406, { 'name': 'sample handler' })
+routeHandlers.notFound = (data, cb) => cb(404)
 
-const router = { 'sample': handlers.sample }
+const router = { 'sample': routeHandlers.sample }
