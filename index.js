@@ -17,8 +17,8 @@ httpServer.listen(config.port, () => {
 
 // instantiate https server
 const httpsServerOptions = {
-  'key': fs.readFileSync('./https/key.pem'),
-  'cert': fs.readFileSync('./https/cert.pem')
+  key: fs.readFileSync('./https/key.pem'),
+  cert: fs.readFileSync('./https/cert.pem'),
 }
 const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
   unifiedServer(req, res)
@@ -60,12 +60,13 @@ const unifiedServer = (req, res) => {
     buffer += decoder.end()
     
     const chosenRouteHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : routeHandlers.notFound
+    
     const data = {
       trimmedPath,
       queryStringObject,
       method,
       headers,
-      'payload': buffer,
+      payload: buffer,
     }
     
     chosenRouteHandler(data, (statusCode, payload) => {
@@ -86,7 +87,20 @@ const unifiedServer = (req, res) => {
 
 const routeHandlers = {}
 
-routeHandlers.sample = (data, cb) => cb(406, { 'name': 'sample handler' })
-routeHandlers.notFound = (data, cb) => cb(404)
+// routeHandlers.sample = (data, cb) => cb(406, { 'name': 'sample handler' })
 
-const router = { 'sample': routeHandlers.sample }
+// ping handler
+routeHandlers.ping = (data, cb) => {
+  cb(200)
+}
+
+// not found handler
+routeHandlers.notFound = (data, cb) => {
+  cb(404)
+}
+
+const router = {
+  // 'sample': routeHandlers.sample
+  ping: routeHandlers.ping,
+
+}
