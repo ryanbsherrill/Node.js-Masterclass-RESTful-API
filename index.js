@@ -1,6 +1,7 @@
 const http = require('http')
 const url = require('url')
 const StringDecoder = require('string_decoder').StringDecoder
+const config = require('./config')
 
 const server = http.createServer((req, res) => {
   
@@ -10,6 +11,7 @@ const server = http.createServer((req, res) => {
   const queryStringObject = parsedUrl.query
   const method = req.method.toLowerCase()
   const headers = req.headers
+  
   const decoder = new StringDecoder('utf-8')
   let buffer = ''
   
@@ -21,7 +23,13 @@ const server = http.createServer((req, res) => {
     buffer += decoder.end()
     
     const chosenRouteHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : routeHandlers.notFound
-    const data = { trimmedPath, queryStringObject, method, headers, 'payload': buffer }
+    const data = {
+      trimmedPath,
+      queryStringObject,
+      method,
+      headers,
+      'payload': buffer,
+    }
     
     chosenRouteHandler(data, (statusCode, payload) => {
       statusCode = typeof(statusCode) == 'number' ? statusCode : 200
@@ -39,7 +47,10 @@ const server = http.createServer((req, res) => {
   })
 })
 
-server.listen(3000, () => console.log('Server listening on port 3000'))
+// start the server, dynamically set PORT using config
+server.listen(config.port, () => {
+  console.log(`Server listening on port ${config.port} in ${config.envName} mode`)
+})
 
 const routeHandlers = {}
 
