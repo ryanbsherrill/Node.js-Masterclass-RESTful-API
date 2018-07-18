@@ -10,18 +10,19 @@ const httpServer = http.createServer((req, res) => {
   unifiedServer(req, res)
 })
 
-// start http server
-httpServer.listen(config.port, () => {
-  console.log(`Server listening on port ${config.httpPort}`)
-})
-
 // instantiate https server
 const httpsServerOptions = {
   key: fs.readFileSync('./https/key.pem'),
   cert: fs.readFileSync('./https/cert.pem'),
 }
+
 const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
   unifiedServer(req, res)
+})
+
+// start http server
+httpServer.listen(config.httpPort, () => {
+  console.log(`Server listening on port ${config.httpPort}`)
 })
 
 // start https server
@@ -52,10 +53,13 @@ const unifiedServer = (req, res) => {
   const decoder = new StringDecoder('utf-8')
   let buffer = ''
   
+  // on data event:
+  // use decoder to append new data from stream to the buffer
   req.on('data', (data) => {
     buffer += decoder.write(data)
   })
   
+  // on end event:
   req.on('end', () => {
     buffer += decoder.end()
     
@@ -87,20 +91,23 @@ const unifiedServer = (req, res) => {
 
 const routeHandlers = {}
 
-// routeHandlers.sample = (data, cb) => cb(406, { 'name': 'sample handler' })
+// sample
+// routeHandlers.sample = (data, cb) => {
+//   cb(406, { 'name': 'sample handler' })
+// }
 
-// ping handler
-routeHandlers.ping = (data, cb) => {
-  cb(200)
-}
-
-// not found handler
+// not found
 routeHandlers.notFound = (data, cb) => {
   cb(404)
 }
 
+// ping
+routeHandlers.ping = (data, cb) => {
+  cb(200)
+}
+
 const router = {
-  // 'sample': routeHandlers.sample
+  // sample: routeHandlers.sample,
   ping: routeHandlers.ping,
 
 }
