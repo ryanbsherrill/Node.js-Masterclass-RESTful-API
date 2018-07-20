@@ -10,12 +10,13 @@ const httpServer = http.createServer((req, res) => {
   unifiedServer(req, res)
 })
 
-// instantiate https server
+// define https server options
 const httpsServerOptions = {
   key: fs.readFileSync('./https/key.pem'),
   cert: fs.readFileSync('./https/cert.pem'),
 }
 
+// instantiate https server
 const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
   unifiedServer(req, res)
 })
@@ -61,10 +62,14 @@ const unifiedServer = (req, res) => {
   
   // on end event:
   req.on('end', () => {
+    
+    // append ending data to buffer
     buffer += decoder.end()
     
+    // choose a handler to route the request to
     const chosenRouteHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : routeHandlers.notFound
     
+    // define object to store all parsed and collected data
     const data = {
       trimmedPath,
       queryStringObject,
@@ -91,11 +96,6 @@ const unifiedServer = (req, res) => {
 
 const routeHandlers = {}
 
-// sample
-// routeHandlers.sample = (data, cb) => {
-//   cb(406, { 'name': 'sample handler' })
-// }
-
 // not found
 routeHandlers.notFound = (data, cb) => {
   cb(404)
@@ -109,5 +109,3 @@ routeHandlers.ping = (data, cb) => {
 const router = {
   // sample: routeHandlers.sample,
   ping: routeHandlers.ping,
-
-}
